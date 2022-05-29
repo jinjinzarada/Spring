@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memberMapper">
+	<resultMap type="Member" id="MemberResultMap">
+		<result column="M_ID" property="mId"/>
+		<result column="NICKNAME" property="nickname"/>
+		<result column="EMAIL" property="email"/>
+		<result column="PHONE" property="phone"/>
+		<result column="PASSWORD" property="password"/>
+	</resultMap>
+	
+	<select id="login" parameterType="hashmap" resultMap="MemberResultMap">
+	SELECT M_ID, NICKNAME, EMAIL FROM MEMBER WHERE M_ID = #{id} AND PASSWORD = #{pwd}
+	</select>
+	
+	<insert id="insertMember" parameterType="Member">
+	insert into member (m_id, nickname, email, phone, password)
+	 values (#{mId},#{nickname},#{email},#{phone},#{password})
+	</insert>
+	
+	<update id="updateMember" parameterType="Member">
+		update member set 
+		NICKNAME=#{nickname}, EMAIL=#{email}, PHONE=#{phone}, PASSWORD=#{password}
+		where M_ID=#{mId}
+	</update>
+	
+	<delete id="deleteMember" parameterType="Member">
+		delete from member 
+		where M_ID=#{mId}
+	</delete>
+	
+	<!-- select 엘리먼트 아이디 selectAllMember의 반환자료형은 ? -->
+	<!-- 토할떄 Member로 웩 -->
+	<select id="selectAllMember" resultMap="MemberResultMap">
+		select * from member
+	</select>
+	
+	<select id="selectOneMember" resultMap="MemberResultMap" parameterType="string">
+		select * from member where m_id = #{mId}
+	</select>
+</mapper>

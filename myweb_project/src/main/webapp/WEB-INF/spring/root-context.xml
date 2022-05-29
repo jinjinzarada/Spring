@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+<!-- 	<bean class="kh.spring.myweb.member.model.vo.Member" id="member">
+	</bean> -->
+	<!-- 
+	<bean class="kh.spring.myweb.member.model.vo.Member" id="member1">
+	</bean>
+	<bean class="kh.spring.myweb.member.model.vo.Member" id="member2">
+	</bean> -->
+	<!-- 
+	<bean class="kh.spring.myweb.common.AdviceLog" ></bean>
+	 -->
+	
+	<!-- DB 관련 -->
+	<!-- DBCP -->
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="ds" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="scott" />
+		<property name="password" value="SCOTT" />
+	</bean>
+	<!-- MyBatis Session -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		<property name="dataSource" ref="ds"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+	</bean>
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+		<constructor-arg ref="sqlSessionFactory"/>
+	</bean>
+	
+	<!-- Transaction Manager commit / rollback 제어-->
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager"> 
+		<property name="dataSource" ref="ds"/>
+	</bean>
+	
+	
+	<!-- 어노테이션(@Transactional) 사용하는  Transaction Advice 구현 설정 -->
+	<tx:annotation-driven/>
+	
+	 
+	<!-- Transaction Advice 구현 설정 
+	<tx:advice transaction-manager="transactionManager" id="txAdvice">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true" rollback-for="Exception"/>
+			<tx:method name="insert*" rollback-for="Exception"/>
+			<tx:method name="update*" rollback-for="Exception"/>
+			<tx:method name="delete*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	-->
+	<!-- AOP 통해서 Transaction 대상을 Pointcut 설정
+	<aop:config>
+		<aop:pointcut expression="execution(public * kh.spring.myweb..*Service.*(..))" id="commonServicePointCut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="commonServicePointCut" />
+	</aop:config>
+ 	-->
+	
+
+
+<!-- 	
+<bean id="member" class="kh.spring.myweb.member.model.vo.Member"/>
+<bean id="member2" class="kh.spring.myweb.member.model.vo.Member"/>
+<bean id="member3" class="kh.spring.myweb.member.model.vo.Member"/>
+<bean id="members" class="kh.spring.myweb.member.model.vo.Member"/>
+-->
+<!-- 
+ org.apache.commons.dbcp.BasicDataSource dataSource = new BasicDataSource();
+ dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
+ dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
+ dataSource.setUsername("scott");
+ dataSource.setPassword("SCOTT");
+ 
+ org.mybatis.spring.SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+ sqlSessionFactory.setDataSource(dataSource);
+ sqlSessionFactory.setConfigLocation("classpath:mybatis-config.xml");
+ 
+ org.mybatis.spring.SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory);
+ --> 
+<!--   	<bean id="temp" class="kh.spring.myweb.temp.controller.TempViewPageController"/> -->
+</beans>
