@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Board"> 
+	<resultMap type="Board" id="BoardAndReCommentResultMap">
+		<id column="B_NO" property="bNo"/>
+		<result column="B_TITLE" property="bTitle"/>
+		<result column="B_CONTENT" property="bContent"/>
+		<result column="B_COUNT" property="bCount"/>
+		<result column="B_WRITE_DATE" property="bWriteDate"/>
+		<result column="B_WRITER" property="bWriter"/>
+		<result column="M_ID" property="mId"/>
+		<result column="reCommentCnt" property="reCommentCnt"/>
+		<collection property="reCommentList" resultMap="ReCommentResultMap"/>
+	</resultMap>
+<!-- 	private List<ReComment> reCommentList;  // 생성자시 초기값 설정하지 않음	 -->
+
+	<resultMap type="Board" id="BoardResultMap">
+		<id column="B_NO" property="bNo"/>
+		<result column="B_TITLE" property="bTitle"/>
+		<result column="B_CONTENT" property="bContent"/>
+		<result column="B_COUNT" property="bCount"/>
+		<result column="B_WRITE_DATE" property="bWriteDate"/>
+		<result column="B_WRITER" property="bWriter"/>
+		<result column="M_ID" property="mId"/>
+		<result column="reCommentCnt" property="reCommentCnt"/>	
+ 		<collection property="reCommentList" resultMap="ReCommentResultMap"/> 
+	</resultMap>
+	
+	<resultMap type="ReComment" id="ReCommentResultMap">
+		<id column="R_NO" property="rNo"/>
+		<result column="B_NO" property="bNo"/>
+		<result column="R_WRITER" property="rWriter"/>
+		<result column="R_WRITE_DATE" property="rWriteDate"/>
+		<result column="R_CONTENT" property="rContent"/>
+		<result column="M_ID" property="mId"/>
+	</resultMap>
+	
+	
+	<select id="selectTotalCnt" resultType="_int">
+		select count(*) from board
+	</select>
+	<select id="selectBoardList" resultMap="BoardResultMap">
+		<![CDATA[
+		select board.*, re_comment.*, (select count(*) from re_comment r where r.b_no= board.b_no) reCommentCnt
+		from board 
+		left outer join re_comment on board.b_no = re_comment.b_no
+		order by board.b_write_date desc, re_comment.r_write_date desc
+		]]>
+		<!-- select * from board left outer join re_comment using (b_no) order by board.b_write_date desc, re_comment.r_write_date desc -->
+		<!-- select b.*, (select count(*) from re_comment r where r.b_no= b.b_no) reCommentCnt from board b order by B_WRITE_DATE desc -->
+	</select>
+	
+	<delete id="deleteBoard" parameterType="_int">
+		delete from board where b_no=#{bNo}
+	</delete>
+	
+	<select id="selectBoardAndReComment" resultMap="BoardAndReCommentResultMap" parameterType="_int">
+	select * from (select * from board where b_no=#{bNo}) t1 
+        left outer join (select * from re_comment where b_no=#{bNo}) t2 using (b_no)
+	</select>
+	
+	<select id="selectBoard" resultMap="BoardResultMap" parameterType="_int">
+		select * from board where b_no=#{bNo}
+	</select>
+	
+	<select id="selectReCommentList" resultMap="ReCommentResultMap" parameterType="_int">
+		select * from re_comment where b_no=#{bNo}
+	</select>
+	
+	<insert id="insertBoard" parameterType="Board">
+		insert into board 
+		values(seq_board_b_no.nextval,#{bTitle},#{bContent},default,default, (select nickname from member where m_id=#{mId}),#{mId})
+	</insert>
+</mapper>

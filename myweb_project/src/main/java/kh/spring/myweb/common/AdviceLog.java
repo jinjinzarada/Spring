@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 @Component
 @Aspect
@@ -27,11 +28,11 @@ public class AdviceLog {
 	
 	//@Before("commonDaoPointCut()")
 	public void beforeLogMethod(JoinPoint jp) {
-		System.out.println("[Before"+jp.getThis()+":"+jp.getSignature().getName()+"]");
+		System.out.println("\t[Before"+jp.getThis()+":"+jp.getSignature().getName()+"]");
 		// 타겟메소드로 전달되는 매개인자들
 		Object[] args = jp.getArgs();
 		for(int i=0; i<args.length; i++) {
-			System.out.print("args["+i+"] "+args[i] +"\n");
+			System.out.print("\t   args["+i+"] "+args[i] +"\n");
 		}	
 	}
 //	@AfterReturning("commonDaoPointCut()")
@@ -48,18 +49,23 @@ public class AdviceLog {
 	public Object aroundLogMethod(ProceedingJoinPoint pjp) throws Throwable {
 		Object ro = null;  // 타겟메소드로부터 return 받은 값을 저장
 		
-		System.out.println("["+pjp.getThis()+":"+pjp.getSignature().getName()+"]");
+		System.out.println("\t\t["+pjp.getThis()+":"+pjp.getSignature().getName()+"]");
 		// 타겟메소드로 전달되는 매개인자들
 		Object[] args = pjp.getArgs();
 		for(int i=0; i<args.length; i++) {
-			System.out.print("args["+i+"] "+args[i] +"\n");
+			System.out.print("\t\t--args["+i+"] "+args[i] +"\n");
 		}	
+		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 		
 		// 타겟메소드 실행
 		ro = pjp.proceed();
 		
+		stopWatch.stop();
+		
 		// 타겟메소드의 return 값
-		System.out.println("DAO Ret : "+ ro);
+		System.out.println("\t\t[DAO Ret:"+stopWatch.getTotalTimeMillis()+"ms] "+ ro);
 		
 		return ro;
 	}
@@ -68,19 +74,19 @@ public class AdviceLog {
 	public Object aroundLogCtrlMethod(ProceedingJoinPoint pjp) throws Throwable {
 		Object ro = null;  // 타겟메소드로부터 return 받은 값을 저장
 		
-		System.out.println("["+pjp.getThis()+":"+pjp.getSignature().getName()+"]");
+		System.out.println("\t["+pjp.getThis()+":"+pjp.getSignature().getName()+"]");
 		// 타겟메소드로 전달되는 매개인자들
 		Object[] args = pjp.getArgs();
 		for(int i=0; i<args.length; i++) {
-			System.out.print("args["+i+"] "+args[i] +"\n");
+			System.out.print("\t-args["+i+"] "+args[i] +"\n");
 		}	
 		
 		// 타겟메소드 실행
 		ro = pjp.proceed();
 		
 		// 타겟메소드의 return 값
-		System.out.println("CRTL Ret : "+ ro);
-		
+		System.out.println("\t[CTRL Ret] "+ ro);
+		System.out.println("");
 		return ro;
 	}
 	

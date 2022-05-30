@@ -405,7 +405,7 @@
                     <article id="art-4">
                         <h2>Main Article</h2>
                         <button id="btn_boardlist">게시판목록</button>
-                        <button onclick="location.href='boardwriteWithFile';">게시판글쓰기+파일추가</button>
+                        <button onclick="location.href='<%=request.getContextPath()%>/board/write';">게시판글쓰기+파일추가</button>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                             labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                             laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
@@ -418,7 +418,7 @@
                             cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                     	<script>
                     		$("#btn_boardlist").click(function(){
-                    			location.href="boardlist";
+                    			location.href="board/list";
                     		});
                     	</script>
                     </article>
