@@ -20,7 +20,8 @@ public class Board {
 //	B_COUNT      NOT NULL NUMBER         
 //	B_WRITE_DATE NOT NULL TIMESTAMP(6)   
 //	B_WRITER     NOT NULL VARCHAR2(60)   
-//	M_ID         NOT NULL VARCHAR2(20)   
+//	M_ID         NOT NULL VARCHAR2(20)
+//	B_FILEPATH            VARCHAR2(512)
 
 	private int bNo;
 	private String bTitle;
@@ -29,6 +30,8 @@ public class Board {
 	private Timestamp bWriteDate;
 	private String bWriter;
 	private String mId;
+	private String bFilePath;
+	
 	private int reCommentCnt;
 	// 게시글 한개에 댓글이 여러개
 	private List<ReComment> reCommentList;
@@ -37,10 +40,9 @@ public class Board {
 	@Override
 	public String toString() {
 		return "Board [bNo=" + bNo + ", bTitle=" + bTitle + ", bContent=" + bContent + ", bCount=" + bCount
-				+ ", bWriteDate=" + bWriteDate + ", bWriter=" + bWriter + ", mId=" + mId + ", reCommentCnt="
-				+ reCommentCnt + ", reCommentList=" + reCommentList + "]";
+				+ ", bWriteDate=" + bWriteDate + ", bWriter=" + bWriter + ", mId=" + mId + ", bFilePath=" + bFilePath
+				+ ", reCommentCnt=" + reCommentCnt + ", reCommentList=" + reCommentList + "]";
 	}
-	
 	public int getbNo() {
 		return bNo;
 	}
@@ -82,6 +84,12 @@ public class Board {
 	}
 	public void setmId(String mId) {
 		this.mId = mId;
+	}
+	public String getbFilePath() {
+		return bFilePath;
+	}
+	public void setbFilePath(String bFilePath) {
+		this.bFilePath = bFilePath;
 	}
 	public int getReCommentCnt() {
 		return reCommentCnt;

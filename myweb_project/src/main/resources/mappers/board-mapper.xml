@@ -9,6 +9,7 @@
 		<result column="B_WRITE_DATE" property="bWriteDate"/>
 		<result column="B_WRITER" property="bWriter"/>
 		<result column="M_ID" property="mId"/>
+		<result column="B_FILEPATH" property="bFilePath"/>
 		<result column="reCommentCnt" property="reCommentCnt"/>
 		<collection property="reCommentList" resultMap="ReCommentResultMap"/>
 	</resultMap>
@@ -22,6 +23,7 @@
 		<result column="B_WRITE_DATE" property="bWriteDate"/>
 		<result column="B_WRITER" property="bWriter"/>
 		<result column="M_ID" property="mId"/>
+		<result column="B_FILEPATH" property="bFilePath"/>
 		<result column="reCommentCnt" property="reCommentCnt"/>	
  		<collection property="reCommentList" resultMap="ReCommentResultMap"/> 
 	</resultMap>
@@ -69,6 +71,7 @@
 	
 	<insert id="insertBoard" parameterType="Board">
 		insert into board 
-		values(seq_board_b_no.nextval,#{bTitle},#{bContent},default,default, (select nickname from member where m_id=#{mId}),#{mId})
+		values(seq_board_b_no.nextval,#{bTitle},#{bContent},default,default, 
+		(select nickname from member where m_id=#{mId}),#{mId},#{bFilePath})
 	</insert>
 </mapper>
