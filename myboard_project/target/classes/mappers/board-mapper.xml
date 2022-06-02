@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Board">
+
+<!-- 
+	private int board_num;
+	private String board_title;
+	private String board_writer;
+	private String board_content;
+	private String board_original_filename;
+	private String board_rename_filename;
+	private Timestamp board_date;
+	private int board_level;
+	private int board_ref;
+	private int board_reply_ref;
+	private int board_reply_seq;
+	private int board_readcount;
+-->
+
+<insert id="insertBoard" parameterType="Board">
+	insert into board 
+	(board_num
+	, board_title, board_writer, board_content, board_original_filename, board_rename_filename
+	, board_date
+	, board_level
+	, board_ref, board_reply_ref
+	, board_reply_seq
+	, board_readcount)
+	values 
+	(	(select nvl(max(BOARD_NUM),0)+1 from board)
+	, #{board_title},#{board_writer}, #{board_content}, #{board_original_filename}, #{board_rename_filename}
+	, DEFAULT
+	, DEFAULT
+	, (select nvl(max(BOARD_NUM),0)+1 from board), (select nvl(max(BOARD_NUM),0)+1 from board)
+	, DEFAULT
+	, DEFAULT
+	)
+	
+</insert>
+<update id="updateBoardReplySeq" parameterType="Board">
+<![CDATA[
+	update board set board_reply_seq = board_reply_seq+1
+	where board_ref=(select board_ref from board where board_num=#{refnum})
+	and board_reply_seq > (select board_reply_seq from board where board_num=#{refnum})
+]]>
+</update>
+<insert id="insertBoardReply" parameterType="Board">
+<![CDATA[
+	insert into board
+	(board_num
+	, board_title, board_writer, board_content, board_original_filename, board_rename_filename
+	, board_date
+	, board_level
+	, board_ref, board_reply_ref
+	, board_reply_seq
+	, board_readcount)
+	values
+	( (select nvl(max(BOARD_NUM),0)+1 from board)
+	, #{board_title},#{board_writer}, #{board_content}, #{board_original_filename}, #{board_rename_filename}
+	, DEFAULT
+	, (select board_level+1 from board where board_num=#{refnum})
+	, (select board_ref from board where board_num=#{refnum})
+	, #{refnum}
+	, (select board_reply_seq+1 from board where board_num=#{refnum})
+	, DEFAULT
+	)
+]]>
+</insert>
+
+<select id="selectBoardListAll" resultType="Board">
+<![CDATA[
+	select * from board
+	order by board_ref desc, board_reply_seq asc
+]]>
+</select>
+<select id="selectBoard" resultType="Board" parameterType="string">
+<![CDATA[
+	select * from board
+	where board_num=#{board_num}
+]]>
+</select>
+
+</mapper>
