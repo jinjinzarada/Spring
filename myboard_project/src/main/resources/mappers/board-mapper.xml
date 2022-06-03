@@ -66,6 +66,28 @@
 	)
 ]]>
 </insert>
+<insert id="insertBoardReply2" parameterType="Board">
+<![CDATA[
+	insert into board
+		(board_num
+		, board_title, board_writer, board_content, board_original_filename, board_rename_filename
+		, board_date
+		, board_level
+		, board_ref, board_reply_ref
+		, board_reply_seq
+		, board_readcount)
+	select (select nvl(max(BOARD_NUM),0)+1 from board)
+		, #{board_title},#{board_writer}, #{board_content}, #{board_original_filename}, #{board_rename_filename}
+		, systimestamp
+		, board_level+1
+		, board_ref
+		, #{refnum}
+		, board_reply_seq+1
+		, 0
+		from board where board_num=#{refnum}
+]]>
+</insert>
+
 
 <select id="selectBoardListAll" resultType="Board">
 <![CDATA[
@@ -79,5 +101,45 @@
 	where board_num=#{board_num}
 ]]>
 </select>
+
+<update id="updateBoard">
+	update board set
+		  board_title = #{board_title}
+		, board_content = #{board_content}
+		, board_original_filename = #{board_original_filename}
+		, board_rename_filename = #{board_rename_filename}
+	where board_num=#{board_num}
+</update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

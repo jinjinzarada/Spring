@@ -31,4 +31,8 @@ public class BoardService {
 	public Board selectBoard(String board_num){
 		return dao.selectBoard(board_num);
 	}
+	public int updateBoard(Board board) {
+		return dao.updateBoard(board);
+	}
+	
 }

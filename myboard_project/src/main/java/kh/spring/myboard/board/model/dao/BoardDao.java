@@ -34,4 +34,8 @@ public class BoardDao {
 	public Board selectBoard(String board_num){
 		return sqlsession.selectOne("Board.selectBoard", board_num);
 	}
+	
+	public int updateBoard(Board board) {
+		return sqlsession.update("Board.updateBoard",board);
+	}
 }
