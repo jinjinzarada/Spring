@@ -37,7 +37,7 @@
 				<td><a href="<%=request.getContextPath()%>/board/read?board_num=${board.board_num }">${board.board_num }</a></td>
 				<td>
 	<c:forEach begin="1" end="${board.board_level }">
-				&#9755;
+				&#8627;
 	</c:forEach>
 				${board.board_title }
 				</td>

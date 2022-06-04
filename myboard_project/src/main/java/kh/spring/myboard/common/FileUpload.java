@@ -15,8 +15,11 @@ public class FileUpload {
 		String result_filename = null;
 		long timeForRename = System.currentTimeMillis();
 		String realPath = request.getSession().getServletContext().getRealPath("");
+//		String realPath = request.getSession().getServletContext().getContextPath(""); -- 잘못된 코드
+//		파일꺼내 바로 읽을수 없다
 		// C:\z_workspace\z_spring\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\myboard_project\
 		String savePath = "resources\\uploadFiles";
+//		String savePath = "\\resources\\uploadFiles"; -- 잘못된 경로
 		File folder = new File(realPath+savePath);
 		if(!folder.exists()) {
 			folder.mkdirs();
@@ -49,6 +52,7 @@ public class FileUpload {
 
 		System.out.println("remove file b:"+board_file);
 		board_file = board_file.substring(board_file.lastIndexOf("/")+1);
+//		중요 이해바람
 		System.out.println("remove file a:"+board_file);
 		
 		String filePath = savePath + "\\" + board_file;
