@@ -2,37 +2,42 @@ package kh.spring.myboard.board.model.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import kh.spring.myboard.board.model.dao.BoardDao;
 import kh.spring.myboard.board.model.vo.Board;
 
-@Service
-public class BoardService {
-
-	@Autowired
-	private BoardDao dao;
-
-	public int insertBoard(Board board) {
-		if(board.getRefnum() > 0) {
-			// 답글
-			dao.updateBoardReplySeq(board);
-			return dao.insertBoardReply(board);
-		} else {
-			// 원글
-			return dao.insertBoard(board);
-		}
-	}
+public interface BoardService {
+	/**
+	 * @param board 게시글로 추가할 내용 
+	 * @return 추가된 글 갯수
+	 * @author Jinny
+	 */
+	public int insertBoard(Board board);
+	/**
+	 *@param board 수정할 글번호 
+	 *@return 수정된 글의 갯수
+	 */
+	public int updateBoard(Board board);
+	/**
+	 * @param board_num 삭제할 글번호 하나
+	 * @return 삭제된 글의 갯수
+	 */
+	public int deleteBoard(String board_num); // 하나의 글을 삭제  
 	
-	public List<Board> selectBoardListAll(){
-		return dao.selectBoardListAll();
-	}
-	public Board selectBoard(String board_num){
-		return dao.selectBoard(board_num);
-	}
-	public int updateBoard(Board board) {
-		return dao.updateBoard(board);
-	}
+	/**
+	 * @param board_num 삭제할 글번호 리스트
+	 * @return : 삭제된 글의 갯수
+	 * 
+	 */
 	
+	public int deleteBoard(List<String> board_num); //여러 글 삭제, return 삭제된 글 갯수
+	
+	public Board selectBoard(String board_num);
+	public List<Board> selectBoardListAll();
+	
+	/** 
+	* @param pageNum 읽을 페이지
+	* @param limit 읽을 게시글 수
+	* @param searchWord 검색할 단어
+	* @return 추가된 글개수
+	*/ 
+//	public List<Board> selectBoardListAll(int pageNum, int limit, String searchWord);
 }

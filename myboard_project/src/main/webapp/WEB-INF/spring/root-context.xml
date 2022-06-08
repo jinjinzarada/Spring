@@ -9,14 +9,22 @@
 	
 	<!-- TODO: password 암호화 -->
 	
-	<!-- TODO: properties 이용 -->
-<!-- 	<context:property-placeholder location="classpath:follay.properties"/> -->
+	<!-- properties 이용 -->
+	<context:property-placeholder location="classpath:abc.properties"/>
+	
 	<!-- DBCP -->
 	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource" destroy-method="close">
-		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
-		<property name="username" value="student" />
-		<property name="password" value="student" />
+<!-- 	org.apache.commons.dbcp.BasicDataSource 이건 외우자 -->
+<!--		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />-->
+ 		<property name="driverClassName" value="${db.driverClassName}" /> 
+<!--		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" /> -->
+ 		<property name="url" value="${db.url}" /> 
+<!-- 		<property name="username" value="student" />-->
+		<property name="username" value="${db.username}" /> 
+<!-- 		<property name="password" value="student" /> -->
+		<property name="password" value="${db.password}" /> 
+		
+		
 	</bean>
 	<!-- MyBatis Session -->
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">

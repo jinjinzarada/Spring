@@ -1,21 +1,27 @@
 package kh.spring.myboard.board.controller;
 
-import java.util.List;
+import java.io.PrintWriter;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kh.spring.myboard.board.model.service.BoardService;
+import kh.spring.myboard.board.model.service.BoardServiceImpl;
 import kh.spring.myboard.board.model.vo.Board;
 import kh.spring.myboard.common.FileUpload;
 import kh.spring.myboard.member.model.vo.Member;
@@ -24,7 +30,7 @@ import kh.spring.myboard.member.model.vo.Member;
 @RequestMapping("/board")
 public class BoardController {
 	@Autowired
-	private BoardService service;
+	private BoardServiceImpl service;
 	@Autowired
 	private FileUpload commonFile;
 	
@@ -37,6 +43,9 @@ public class BoardController {
 			refnum = Integer.parseInt(refnumStr);
 		}catch (Exception e) {
 		}
+		
+		System.out.println("[[쵠진]]"+refnum);
+		
 		mv.addObject("refnum", refnum);
 		mv.setViewName("board/insert");
 		return mv;
@@ -101,6 +110,7 @@ public class BoardController {
 		return mv;
 	}
 	@PostMapping("/updateDo")
+//	화면에 안보여짐 구리게 지어도 상관없삼
 	public ModelAndView updateBoard(ModelAndView mv
 			, Board board
 			, @RequestParam(name="uploadfile", required = false) MultipartFile uploadfile
@@ -141,10 +151,53 @@ public class BoardController {
 		return mv;
 	}
 	
-	@PostMapping("/delete")
-	public ModelAndView deleteBoard(ModelAndView mv) {
-//		TODO
-		mv.setViewName("board/update");
-		return mv;
+//	@PostMapping("/delete")
+//	public ModelAndView deleteBoard(ModelAndView mv
+//		,@RequestParam(name="board_num", required = false) String board_num
+//		,RedirectAttribute rttr
+//
+//		) {
+//		int result = service.deleteBoard(board_num);
+//		if(result>0) {
+//			rttr.addFlashAttribute("msg","게시글"+board_num+"번 삭제되었습니다.");
+//		}
+//		mv.setViewName("redirect:/board/list");
+//		return mv;
+//	}
+//	ajax방식 - ModelAndView 사용안함요
+//	@PostMapping("/delete")
+//	public String deleteBoard(
+//			@RequestParam(name="board_num", required = false) String board_num
+////			, PrintWriter out
+//			) {
+//				
+//			int result = service.deleteBoard(board_num);
+//			String msg="";
+//			if(result>0) {
+//				msg="게시글"+board_num+"번 삭제되었습니다.";
+//			} else {
+//				msg="게시글"+board_num+"번 삭제되었습니다.";
+//			}
+//		
+////		out.print(msg);
+////		out.flush();
+////		out.close();
+//			
+//	}
+	
+//	ajax방식 - @ResponseBody, 한글깨짐
+	@PostMapping(value="/delete", produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String deleteBoard(
+			@RequestParam(name="board_num", required = false) String board_num
+		) {
+		int result = service.deleteBoard(board_num);
+		String msg="";
+		if(result>0) {
+			msg= "게시글 "+board_num+"번 삭제되었습니다.";
+		}else {
+			msg="게시글이 삭제되지 못했습니다. 다시 확인하고 삭제해주세요.";
+		}
+		return msg;
 	}
 }

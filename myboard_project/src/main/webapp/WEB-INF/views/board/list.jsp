@@ -9,7 +9,12 @@
 </head>
 <body>
 <div><button type="button" onclick="location.href='<%=request.getContextPath() %>/'">홈</button></div>
-
+<script>
+	var msg="${msg}";
+	if(msg){
+		alert(msg);
+	}
+</script>
 <c:choose>
 <c:when test="${empty boardlist}">
 	<div>작성된 글이 없습니다.</div>

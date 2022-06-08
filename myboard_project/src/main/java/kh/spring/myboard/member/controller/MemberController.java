@@ -1,16 +1,21 @@
 package kh.spring.myboard.member.controller;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import kh.spring.myboard.member.model.service.MemberService;
+import kh.spring.myboard.member.model.service.MemberServiceImpl;
 import kh.spring.myboard.member.model.vo.Member;
 
 @Controller
@@ -18,19 +23,31 @@ import kh.spring.myboard.member.model.vo.Member;
 public class MemberController {
 	
 	@Autowired
-	private MemberService service;
+	private MemberServiceImpl service;
+	
+	@Inject
+	private BCryptPasswordEncoder pwdEncoding;
 
-	@GetMapping("/enroll")
+//	@GetMapping("/enroll")
+	@RequestMapping(value="enroll", method= RequestMethod.GET)
 	public ModelAndView pageInsert(ModelAndView mv) {
 		mv.setViewName("member/insert");
 		return mv;
 	}
 	@PostMapping("/enroll")
 	public ModelAndView insert(ModelAndView mv
+//			, @RequestParam(name="title", defaultValue="") String t1
+//			, @RequestParam(name="title", required = false) String t1
 			, Member member
 			, RedirectAttributes rttr
+			, HttpServletRequest req
 			) {
-		
+		String t2 = req.getParameter("title");
+		if(t2==null) {
+//			t2="aaa"; , defaultValue = "aaa"
+			t2 = null; 	//	required = false
+		}
+//		암호화 member.setPasswd(pwdEncoding.encode(member.getPasswd()));
 		int result = service.insertMember(member);
 		if(result < 1) {
 			rttr.addFlashAttribute("msg", "가입에 실패했습니다. 다시 회원가입 시도해주세요.");
@@ -55,6 +72,7 @@ public class MemberController {
 			) {
 		Member result = service.selectLogin(member);
 		
+//		암호화 member.setPasswd(pwdEncoding.encode(member.getPasswd()));
 		// 오류인 케이스
 		if(result == null) {
 			rttr.addFlashAttribute("msg","로그인에 실패했습니다. 아이디와 패스워드를 다시 확인해 주세요.");

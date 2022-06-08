@@ -27,7 +27,19 @@
 	
 	<aop:aspectj-autoproxy/>
 	
+	
+<!-- aop 설정 -->	
+<!-- 	<beans:bean class="kh.spring.myboard.common.AdviceLog" id="adviceLog"></beans:bean> -->
+<!-- 	<aop:config> -->
+<!-- 		<aop:aspect ref="adviceLog"> -->
+<!-- 			<aop:pointcut expression="execute(public * kh.spring.myboard..*Dao.*(..))" id="abc"/> -->
+<!-- 			<aop:around method="aroundLogMethod" pointcut="execute(public * kh.spring.myboard..*Dao.*(..))"/> -->
+<!-- 			<aop:around method="aroundLogCtrlMethod" pointcut-ref="abc"/> -->
+<!-- 		</aop:aspect> -->
+<!-- 	</aop:config> -->
+	
 	<!-- resolver -->
+	<!-- 파일을 추가하기 위한 resolve -->
 	<beans:bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
 		<beans:property name="defaultEncoding" value="utf-8"/>
 		<beans:property name="maxUploadSize" value="10485760"/>

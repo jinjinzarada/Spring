@@ -111,8 +111,9 @@
 	where board_num=#{board_num}
 </update>
 
-
-
+<delete id="deleteBoard" parameterType="string">
+	delete from board where board_num=#{board_num}
+</delete>
 
 
 

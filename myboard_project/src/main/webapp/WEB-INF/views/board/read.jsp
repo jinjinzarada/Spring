@@ -9,6 +9,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 </head>
 <body>
+<script>
+	var msg="${msg}";
+	if(msg){
+		alert(msg);
+	}
+</script>
 <div><button type="button" onclick="location.href='<%=request.getContextPath() %>/'">홈</button></div>
 <c:choose>
 <c:when test="${empty board }">
@@ -31,7 +37,7 @@
 		</form>
 		
 		<script>
-		$(".btn").click(function(){
+		$(".btn.update").click(function(){
 			if($(this).hasClass("update")){
 // 				이것(this)에 update가 있느냐
 				frmNum.action="<%=request.getContextPath() %>/board/update";
@@ -43,6 +49,24 @@
 			}
 			frmNum.method="post";
 			frmNum.submit();
+		});
+		
+		$(".btn.delete").click(function(){
+			$.ajax({
+				url:"<%=request.getContextPath()%>/board/delete"
+				,type:"post"
+				,data:{board_num:"${board.board_num}"}
+				,success:function(result){
+					console.log(result);
+					if(result){
+						alert(result);
+					}
+					location.href="<%=request.getContextPath()%>/board/list";
+				}
+				,error:function(errcode){
+					console.log(errcode);
+				}
+			});
 		});
 		</script>
 	</div>
